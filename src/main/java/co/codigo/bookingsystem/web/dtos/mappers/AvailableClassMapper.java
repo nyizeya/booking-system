@@ -6,6 +6,7 @@ import co.codigo.bookingsystem.web.dtos.response.AvailableClassDto;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -25,9 +26,16 @@ public interface AvailableClassMapper extends BaseMapper<AvailableClassDto, Avai
     @Override
     List<AvailableClassDto> toDTOList(List<AvailableClass> entityList);
 
-    default long calculateAvailableSlots(AvailableClass availableClass) {
-        return availableClass.getMaxCapacity() - availableClass.getBookings().stream()
+    @Named("toDTO")
+    default AvailableClassDto mapToDTO(AvailableClass classEntity) {
+        return toDTO(classEntity); // Call the main toDTO method here
+    }
+
+    default int calculateAvailableSlots(AvailableClass availableClass) {
+        long count = availableClass.getMaxCapacity() - availableClass.getBookings().stream()
                 .filter(b -> b.getStatus() == BookingStatus.CONFIRMED)
                 .count();
+
+        return Integer.parseInt(String.valueOf(count));
     }
 }

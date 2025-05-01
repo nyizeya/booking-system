@@ -1,7 +1,6 @@
 package co.codigo.bookingsystem.common.exceptions.handlers;
 
 import co.codigo.bookingsystem.common.exceptions.*;
-import com.codigo.bookingsystem.common.exceptions.*;
 import co.codigo.bookingsystem.web.dtos.response.MessageResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
