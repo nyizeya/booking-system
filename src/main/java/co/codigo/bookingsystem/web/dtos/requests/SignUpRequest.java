@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
 public class SignUpRequest {
 
@@ -21,5 +19,9 @@ public class SignUpRequest {
     @Size(min = 4, max = 40)
     @NotBlank(message = "Password must be at least 4 characters long")
     private String password;
+
+    @Size(min = 2, max = 2)
+    @NotBlank(message = "Country code must be provided")
+    private String countryCode;
 
 }

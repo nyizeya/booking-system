@@ -30,11 +30,11 @@ public class BookingSystemApplication {
             }
 
             if (userService.findAllUsers().isEmpty()) {
-                User adminUser = new User("admin", "admin@gmail.com", "1234");
+                User adminUser = new User("admin", "admin@gmail.com", "1234", "US");
                 adminUser.setRole(roleService.findByRoleName(AppRole.ROLE_ADMIN).get());
                 userService.createNewUser(adminUser);
 
-                User user = new User("user", "user@gmail.com", "1234");
+                User user = new User("user", "user@gmail.com", "1234", "UK");
                 user.setRole(roleService.findByRoleName(AppRole.ROLE_USER).get());
                 userService.createNewUser(user);
             }

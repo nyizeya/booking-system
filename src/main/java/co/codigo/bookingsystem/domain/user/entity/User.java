@@ -50,6 +50,11 @@ public class User extends Auditable implements Serializable {
     @Size(max = 50)
     private String email;
 
+    @NotBlank
+    @Size(max = 2)
+    @Column(nullable = false)
+    private String countryCode;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @JsonBackReference
@@ -66,24 +71,23 @@ public class User extends Auditable implements Serializable {
     private LocalDate credentialsExpiryDate = LocalDate.now().plusYears(1);
     private LocalDate accountExpiryDate = LocalDate.now().plusYears(1);
 
-    @Column(nullable = false)
-    private String country;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<PurchasedPackage> userPackages = new ArrayList<>();
 
-    public User(String userName, String email, String password) {
+    public User(String userName, String email, String password, String countryCode) {
         this.username = userName;
         this.email = email;
         this.password = password;
+        this.countryCode = countryCode;
     }
 
-    public User(String userName, String email) {
+    public User(String userName, String email, String countryCode) {
         this.username = userName;
         this.email = email;
+        this.countryCode = countryCode;
     }
 
 }
