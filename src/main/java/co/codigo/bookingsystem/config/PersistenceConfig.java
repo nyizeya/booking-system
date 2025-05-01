@@ -11,7 +11,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {
-        "com.codigo.bookingsystem.domain.user.repository"
+        "co.codigo.bookingsystem.domain.user.repository",
+        "co.codigo.bookingsystem.domain.availableclass.repository",
+        "co.codigo.bookingsystem.domain.booking.repository",
+        "co.codigo.bookingsystem.domain.packageplan.repository",
+        "co.codigo.bookingsystem.domain.purchasedpkg.repository",
+        "co.codigo.bookingsystem.domain.waitlist.repository",
 })
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class PersistenceConfig {

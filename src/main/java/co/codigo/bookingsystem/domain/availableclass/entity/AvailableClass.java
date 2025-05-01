@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
-        name = "classes",
+        name = "available_class",
         uniqueConstraints = {
                 @UniqueConstraint(name = "class_name", columnNames = "name"),
         }

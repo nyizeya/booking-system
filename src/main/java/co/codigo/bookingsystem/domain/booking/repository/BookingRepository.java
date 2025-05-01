@@ -19,11 +19,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findUpcomingByUser(@Param("userId") Long userId, @Param("now") LocalDateTime now);
     
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookedClass.id = :classId " +
-           "AND b.status = com.codigo.bookingsystem.common.enumerations.BookingStatus.CONFIRMED")
+           "AND b.status = co.codigo.bookingsystem.common.enumerations.BookingStatus.CONFIRMED")
     int countConfirmedBookingsForClass(@Param("classId") Long classId);
     
     @Query("SELECT b FROM Booking b WHERE b.bookedClass.id = :classId " +
-           "AND b.status = com.codigo.bookingsystem.common.enumerations.BookingStatus.CONFIRMED " +
+           "AND b.status = co.codigo.bookingsystem.common.enumerations.BookingStatus.CONFIRMED " +
            "ORDER BY b.bookedAt ASC")
     List<Booking> findConfirmedBookingsForClass(@Param("classId") Long classId);
     
