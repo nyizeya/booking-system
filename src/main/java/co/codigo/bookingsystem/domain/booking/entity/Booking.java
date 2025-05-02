@@ -1,6 +1,5 @@
 package co.codigo.bookingsystem.domain.booking.entity;
 
-import co.codigo.bookingsystem.common.enumerations.BookingStatus;
 import co.codigo.bookingsystem.domain.audit.Auditable;
 import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
 import co.codigo.bookingsystem.domain.purchasedpkg.entity.PurchasedPackage;

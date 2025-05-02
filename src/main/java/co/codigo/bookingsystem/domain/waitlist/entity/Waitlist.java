@@ -1,6 +1,5 @@
 package co.codigo.bookingsystem.domain.waitlist.entity;
 
-import co.codigo.bookingsystem.common.enumerations.WaitlistStatus;
 import co.codigo.bookingsystem.domain.audit.Auditable;
 import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
 import co.codigo.bookingsystem.domain.user.entity.User;

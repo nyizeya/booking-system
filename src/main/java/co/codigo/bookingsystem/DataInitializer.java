@@ -1,7 +1,5 @@
 package co.codigo.bookingsystem;
 
-import co.codigo.bookingsystem.common.enumerations.BookingStatus;
-import co.codigo.bookingsystem.common.enumerations.WaitlistStatus;
 import co.codigo.bookingsystem.domain.booking.entity.Booking;
 import co.codigo.bookingsystem.domain.booking.repository.BookingRepository;
 import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;

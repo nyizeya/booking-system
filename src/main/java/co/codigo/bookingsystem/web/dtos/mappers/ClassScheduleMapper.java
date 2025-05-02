@@ -1,6 +1,5 @@
 package co.codigo.bookingsystem.web.dtos.mappers;
 
-import co.codigo.bookingsystem.common.enumerations.BookingStatus;
 import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
 import co.codigo.bookingsystem.web.dtos.response.ClassScheduleDto;
 import org.mapstruct.Mapper;
@@ -24,10 +23,7 @@ public interface ClassScheduleMapper extends BaseMapper<ClassScheduleDto, ClassS
     List<ClassScheduleDto> toDTOList(List<ClassSchedule> entityList);
 
     default int calculateAvailableSlots(ClassSchedule classSchedule) {
-        long count = classSchedule.getMaxCapacity() - classSchedule.getBookings().stream()
-                .filter(b -> b.getStatus() == BookingStatus.CONFIRMED)
-                .count();
-
+        long count = classSchedule.getMaxCapacity() - (long) classSchedule.getBookings().size();
         return Integer.parseInt(String.valueOf(count));
     }
 }

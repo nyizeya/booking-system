@@ -1,6 +1,5 @@
 package co.codigo.bookingsystem.web.dtos.response;
 
-import co.codigo.bookingsystem.common.enumerations.BookingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 public class BookingDto {
     private Long id;
     private ClassScheduleDto classDetails;
-    private BookingStatus status;
     private LocalDateTime bookedAt;
     private Boolean checkedIn;
 }
