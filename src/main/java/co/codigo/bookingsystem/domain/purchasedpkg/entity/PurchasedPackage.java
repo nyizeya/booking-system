@@ -43,7 +43,4 @@ public class PurchasedPackage extends Auditable implements Serializable {
     
     @Column(name = "remaining_credits", nullable = false)
     private Integer remainingCredits;
-    
-    @Column(name = "payment_ref")
-    private String paymentReference;
 }

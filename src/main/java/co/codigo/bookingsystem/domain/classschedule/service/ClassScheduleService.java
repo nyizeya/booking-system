@@ -20,16 +20,13 @@ public class ClassScheduleService {
     private final ClassScheduleRepository classRepository;
     private final PackagePlanService packagePlanService;
 
-    public List<ClassSchedule> getUpcomingClassesByCountry(String countryCode) {
-        return classRepository.findUpcomingClassesByCountry(
-            countryCode, 
-            LocalDateTime.now()
-        );
+    public List<ClassSchedule> getClassSchedulesByCountryCode(String countryCode) {
+        return classRepository.findByCountryCode(countryCode);
     }
 
-    public ClassSchedule getClassWithLock(Long classId) {
+    public ClassSchedule getClassScheduleId(Long classId) {
         return classRepository.findById(classId)
-            .orElseThrow(() -> CommonUtils.createEntityNotFoundException("Available class", "id", classId));
+            .orElseThrow(() -> CommonUtils.createEntityNotFoundException("Class schedule", "id", classId));
     }
 
     @Transactional
@@ -37,16 +34,14 @@ public class ClassScheduleService {
         List<PackagePlan> packages = packagePlanService.getActivePackagesByCountry(
                 classSchedule.getCountryCode()
         );
+
         if (packages.isEmpty()) {
             throw new BusinessRuleException(
                     "Cannot create class for country " + classSchedule.getCountryCode() +
                             ": No active packages available for booking"
             );
         }
-        return classRepository.save(classSchedule);
-    }
 
-    public List<ClassSchedule> findAllEndedClasses() {
-        return classRepository.findByEndTimeBefore(LocalDateTime.now());
+        return classRepository.save(classSchedule);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,21 +42,21 @@ public class PackagePlan extends Auditable implements Serializable {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(name = "expiry_days", nullable = false)
-    private Integer expiryDays;
-
-    @Column(nullable = false)
-    private boolean active = true;
+    @Column(name = "expiry_date", nullable = false)
+    private LocalDateTime expiryDate;
 
     @OneToMany(mappedBy = "packagePlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchasedPackage> purchasedPackages = new ArrayList<>();
 
-    public PackagePlan(String name, String countryCode, Integer credits, BigDecimal price, Integer expiryDays, boolean active) {
+    public boolean isActive() {
+        return expiryDate.isAfter(LocalDateTime.now());
+    }
+
+    public PackagePlan(String name, String countryCode, Integer credits, BigDecimal price, LocalDateTime expiryDate) {
         this.name = name;
         this.countryCode = countryCode;
         this.credits = credits;
         this.price = price;
-        this.expiryDays = expiryDays;
-        this.active = active;
+        this.expiryDate = expiryDate;
     }
 }

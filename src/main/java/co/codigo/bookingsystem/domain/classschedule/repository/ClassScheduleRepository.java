@@ -10,24 +10,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClassScheduleRepository extends JpaRepository<ClassSchedule, Long> {
-    
-    @Query("SELECT c FROM ClassSchedule c WHERE c.countryCode = :countryCode " +
-           "AND c.startTime > :now ORDER BY c.startTime ASC")
-    List<ClassSchedule> findUpcomingClassesByCountry(@Param("countryCode") String countryCode,
-                                                     @Param("now") LocalDateTime now);
-    
-    @Query("SELECT c FROM ClassSchedule c WHERE c.countryCode = :countryCode " +
-           "AND c.startTime BETWEEN :start AND :end ORDER BY c.startTime ASC")
-    List<ClassSchedule> findByCountryAndDateRange(@Param("countryCode") String countryCode,
-                                                  @Param("start") LocalDateTime start,
-                                                  @Param("end") LocalDateTime end);
-
-    @Query("SELECT c FROM ClassSchedule c WHERE c.startTime < :endDate")
-    List<ClassSchedule> findByEndTimeBefore(@Param("endDate") LocalDateTime endDate);
-
-    @Query("SELECT c FROM ClassSchedule c LEFT JOIN FETCH c.bookings WHERE c.id = :classId")
-    Optional<ClassSchedule> findByIdWithBookings(@Param("classId") Long classId);
-    
-    @Query("SELECT c FROM ClassSchedule c LEFT JOIN FETCH c.waitlists WHERE c.id = :classId")
-    Optional<ClassSchedule> findByIdWithWaitlists(@Param("classId") Long classId);
+    List<ClassSchedule> findByCountryCode(String countryCode);
 }

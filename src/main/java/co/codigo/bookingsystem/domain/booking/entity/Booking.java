@@ -42,10 +42,6 @@ public class Booking extends Auditable implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchased_package_id", nullable = false)
     private PurchasedPackage purchasedPackage;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private BookingStatus status = BookingStatus.CONFIRMED;
     
     @Column(name = "booked_at", nullable = false)
     private LocalDateTime bookedAt = LocalDateTime.now();
@@ -59,10 +55,9 @@ public class Booking extends Auditable implements Serializable {
     @Column(name = "credit_refunded")
     private Boolean creditRefunded = false;
 
-    public Booking(User user, ClassSchedule bookedClass, BookingStatus status, LocalDateTime bookedAt) {
+    public Booking(User user, ClassSchedule bookedClass, LocalDateTime bookedAt) {
         this.user = user;
         this.bookedClass = bookedClass;
-        this.status = status;
         this.bookedAt = bookedAt;
 
     }

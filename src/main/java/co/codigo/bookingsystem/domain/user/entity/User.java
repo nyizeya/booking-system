@@ -13,6 +13,7 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,8 @@ public class User extends Auditable implements Serializable {
     @Column(nullable = false)
     private String countryCode;
 
+    private BigDecimal balance = new BigDecimal(10_000);
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @JsonBackReference
@@ -74,7 +77,7 @@ public class User extends Auditable implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<PurchasedPackage> userPackages = new ArrayList<>();
 
     public User(String userName, String email, String password, String countryCode) {

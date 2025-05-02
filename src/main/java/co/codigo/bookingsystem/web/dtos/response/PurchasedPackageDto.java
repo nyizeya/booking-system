@@ -17,4 +17,8 @@ public class PurchasedPackageDto {
     private LocalDateTime expiryDate;
     private int remainingCredits;
     private boolean expired;
+
+    public boolean isExpired() {
+        return expiryDate.isBefore(LocalDateTime.now());
+    }
 }

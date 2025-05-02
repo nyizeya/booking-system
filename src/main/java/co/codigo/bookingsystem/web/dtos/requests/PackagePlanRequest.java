@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -29,9 +30,9 @@ public class PackagePlanRequest {
     @Min(value = 1, message = "Credit count must be greater than 0")
     private Integer creditCount;
 
-    @NotNull(message = "Expiry days must not be null")
-    @Min(value = 1, message = "Expiry days must be greater than 0")
-    private Integer expiryDays;
+    @NotNull(message = "Expiry date must not be null")
+    @Min(value = 1, message = "Expiry date must be greater than 0")
+    private LocalDateTime expiryDays;
 
     @NotNull(message = "Active status must not be null")
     private Boolean active;

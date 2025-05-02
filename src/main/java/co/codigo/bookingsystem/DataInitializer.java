@@ -39,26 +39,26 @@ public class DataInitializer implements CommandLineRunner {
         userService.createNewUser(user1);
         userService.createNewUser(user2);
 
-        PackagePlan packagePlan1 = new PackagePlan("Standard Plan", "US", 100, new BigDecimal(100), 30, true);
-        PackagePlan packagePlan2 = new PackagePlan("Premium Plan", "US", 200, new BigDecimal(100),60, true);
+        PackagePlan packagePlan1 = new PackagePlan("Standard Plan", "US", 100, new BigDecimal(100), LocalDateTime.now().plusDays(30));
+        PackagePlan packagePlan2 = new PackagePlan("Premium Plan", "US", 200, new BigDecimal(100), LocalDateTime.now().plusDays(30));
         packagePlanRepository.save(packagePlan1);
         packagePlanRepository.save(packagePlan2);
 
-        PurchasedPackage purchasedPackage1 = purchasedPackageService.purchasePackage(user1.getId(), packagePlan1.getId(), "paymentRef123");
-        PurchasedPackage purchasedPackage2 = purchasedPackageService.purchasePackage(user2.getId(), packagePlan2.getId(), "paymentRef456");
+        PurchasedPackage purchasedPackage1 = purchasedPackageService.purchasePackage(user1, packagePlan1.getId());
+        PurchasedPackage purchasedPackage2 = purchasedPackageService.purchasePackage(user2, packagePlan2.getId());
 
         ClassSchedule class1 = new ClassSchedule("Yoga Class", "US", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(1).plusHours(1), 10, 5, 20);
         ClassSchedule class2 = new ClassSchedule("Pilates Class", "US", LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(2).plusHours(1), 10, 6, 30);
         classScheduleService.createClass(class1);
         classScheduleService.createClass(class2);
 
-        Waitlist waitlist1 = new Waitlist(user1, class1, WaitlistStatus.PENDING, 1, LocalDateTime.now());
-        Waitlist waitlist2 = new Waitlist(user2, class2, WaitlistStatus.PENDING, 2, LocalDateTime.now());
+        Waitlist waitlist1 = new Waitlist(user1, class1, 1, LocalDateTime.now());
+        Waitlist waitlist2 = new Waitlist(user2, class2, 2, LocalDateTime.now());
         waitlistRepository.save(waitlist1);
         waitlistRepository.save(waitlist2);
 
-        Booking booking1 = new Booking(user1, class1, BookingStatus.CONFIRMED, LocalDateTime.now());
-        Booking booking2 = new Booking(user2, class2, BookingStatus.CONFIRMED, LocalDateTime.now());
+        Booking booking1 = new Booking(user1, class1, LocalDateTime.now());
+        Booking booking2 = new Booking(user2, class2, LocalDateTime.now());
         bookingRepository.save(booking1);
         bookingRepository.save(booking2);
 

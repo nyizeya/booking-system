@@ -15,5 +15,5 @@ public class PackagePlanDto {
     private String countryCode;
     private int credits;
     private BigDecimal price;
-    private int expiryDays;
+    private boolean expired;
 }

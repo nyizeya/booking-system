@@ -38,16 +38,11 @@ public class Waitlist extends Auditable implements Serializable {
     
     @Column(name = "added_at", nullable = false)
     private LocalDateTime addedAt = LocalDateTime.now();
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private WaitlistStatus status = WaitlistStatus.PENDING;
 
-    public Waitlist(User user, ClassSchedule waitingClass, WaitlistStatus status, Integer position, LocalDateTime addedAt) {
+    public Waitlist(User user, ClassSchedule waitingClass, Integer position, LocalDateTime addedAt) {
         this.user = user;
         this.waitingClass = waitingClass;
         this.position = position;
-        this.status = status;
         this.addedAt = addedAt;
     }
 }

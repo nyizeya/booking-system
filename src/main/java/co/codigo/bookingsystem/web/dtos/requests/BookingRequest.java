@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingRequest {
-    @NotNull(message = "Class is required for booking")
+    @NotNull(message = "Class id is required for booking")
     private Long classId;
-    private Long userPackageId;
+    @NotNull(message = "Package id is required for booking")
+    private Long packageId;
 }
