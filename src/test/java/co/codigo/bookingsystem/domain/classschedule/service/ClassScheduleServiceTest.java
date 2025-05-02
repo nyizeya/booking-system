@@ -1,8 +1,8 @@
-package co.codigo.bookingsystem.domain.availableclass.service;
+package co.codigo.bookingsystem.domain.classschedule.service;
 
 import co.codigo.bookingsystem.common.exceptions.BusinessRuleException;
-import co.codigo.bookingsystem.domain.availableclass.entity.AvailableClass;
-import co.codigo.bookingsystem.domain.availableclass.repository.AvailableClassRepository;
+import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
+import co.codigo.bookingsystem.domain.classschedule.repository.ClassScheduleRepository;
 import co.codigo.bookingsystem.domain.packageplan.entity.PackagePlan;
 import co.codigo.bookingsystem.domain.packageplan.service.PackagePlanService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,16 +21,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-class AvailableClassServiceTest {
+class ClassScheduleServiceTest {
 
     @Mock
-    private AvailableClassRepository classRepository;
+    private ClassScheduleRepository classRepository;
 
     @Mock
     private PackagePlanService packagePlanService;
 
     @InjectMocks
-    private AvailableClassService classService;
+    private ClassScheduleService classService;
 
     @BeforeEach
     void setUp() {
@@ -40,20 +40,20 @@ class AvailableClassServiceTest {
     @Test
     void getUpcomingClassesByCountry_returnsList() {
         String countryCode = "SG";
-        List<AvailableClass> expected = List.of(new AvailableClass());
+        List<ClassSchedule> expected = List.of(new ClassSchedule());
         when(classRepository.findUpcomingClassesByCountry(eq(countryCode), any())).thenReturn(expected);
 
-        List<AvailableClass> result = classService.getUpcomingClassesByCountry(countryCode);
+        List<ClassSchedule> result = classService.getUpcomingClassesByCountry(countryCode);
         assertThat(result).isEqualTo(expected);
     }
 
     @Test
     void getClassWithLock_returnsClass() {
-        AvailableClass availableClass = new AvailableClass();
-        when(classRepository.findById(1L)).thenReturn(Optional.of(availableClass));
+        ClassSchedule classSchedule = new ClassSchedule();
+        when(classRepository.findById(1L)).thenReturn(Optional.of(classSchedule));
 
-        AvailableClass result = classService.getClassWithLock(1L);
-        assertThat(result).isEqualTo(availableClass);
+        ClassSchedule result = classService.getClassWithLock(1L);
+        assertThat(result).isEqualTo(classSchedule);
     }
 
     @Test
@@ -65,35 +65,35 @@ class AvailableClassServiceTest {
 
     @Test
     void createClass_throwsException_whenNoPackages() {
-        AvailableClass availableClass = new AvailableClass();
-        availableClass.setCountryCode("MY");
+        ClassSchedule classSchedule = new ClassSchedule();
+        classSchedule.setCountryCode("MY");
 
         when(packagePlanService.getActivePackagesByCountry("MY"))
                 .thenReturn(Collections.emptyList());
 
-        assertThatThrownBy(() -> classService.createClass(availableClass))
+        assertThatThrownBy(() -> classService.createClass(classSchedule))
                 .isInstanceOf(BusinessRuleException.class);
     }
 
     @Test
     void createClass_savesClass_whenPackagesExist() {
-        AvailableClass availableClass = new AvailableClass();
-        availableClass.setCountryCode("MY");
+        ClassSchedule classSchedule = new ClassSchedule();
+        classSchedule.setCountryCode("MY");
 
         when(packagePlanService.getActivePackagesByCountry("MY"))
                 .thenReturn(List.of(new PackagePlan()));
-        when(classRepository.save(any())).thenReturn(availableClass);
+        when(classRepository.save(any())).thenReturn(classSchedule);
 
-        AvailableClass result = classService.createClass(availableClass);
-        assertThat(result).isEqualTo(availableClass);
+        ClassSchedule result = classService.createClass(classSchedule);
+        assertThat(result).isEqualTo(classSchedule);
     }
 
     @Test
     void findAllEndedClasses_returnsList() {
-        List<AvailableClass> expected = List.of(new AvailableClass());
+        List<ClassSchedule> expected = List.of(new ClassSchedule());
         when(classRepository.findByEndTimeBefore(any())).thenReturn(expected);
 
-        List<AvailableClass> result = classService.findAllEndedClasses();
+        List<ClassSchedule> result = classService.findAllEndedClasses();
         assertThat(result).isEqualTo(expected);
     }
 

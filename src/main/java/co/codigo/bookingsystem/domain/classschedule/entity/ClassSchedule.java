@@ -1,4 +1,4 @@
-package co.codigo.bookingsystem.domain.availableclass.entity;
+package co.codigo.bookingsystem.domain.classschedule.entity;
 
 import co.codigo.bookingsystem.domain.audit.Auditable;
 import co.codigo.bookingsystem.domain.booking.entity.Booking;
@@ -18,24 +18,24 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
-        name = "available_class",
+        name = "class_schedule",
         uniqueConstraints = {
                 @UniqueConstraint(name = "class_name", columnNames = "name"),
         }
 )
 @EqualsAndHashCode(callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
-public class AvailableClass extends Auditable implements Serializable {
+public class ClassSchedule extends Auditable implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "country_code", nullable = false, length = 2)
-    private String countryCode;
-    
+
     @Column(nullable = false)
     private String name;
+
+    @Column(name = "country_code", nullable = false, length = 2)
+    private String countryCode;
     
     private String description;
     
@@ -59,4 +59,14 @@ public class AvailableClass extends Auditable implements Serializable {
 
     @OneToMany(mappedBy = "waitingClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Waitlist> waitlists = new ArrayList<>();
+
+    public ClassSchedule(String name, String countryCode, LocalDateTime startTime, LocalDateTime endTime, Integer requiredCredits, Integer maxCapacity, Integer durationMinutes) {
+        this.name = name;
+        this.countryCode = countryCode;
+        this.requiredCredits = requiredCredits;
+        this.maxCapacity = maxCapacity;
+        this.durationMinutes = durationMinutes;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 }

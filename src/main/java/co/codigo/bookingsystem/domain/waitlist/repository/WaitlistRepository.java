@@ -1,5 +1,6 @@
 package co.codigo.bookingsystem.domain.waitlist.repository;
 
+import co.codigo.bookingsystem.common.enumerations.WaitlistStatus;
 import co.codigo.bookingsystem.domain.waitlist.entity.Waitlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -36,6 +37,8 @@ public interface WaitlistRepository extends JpaRepository<Waitlist, Long> {
 
     Optional<Waitlist> findTopByWaitingClassIdOrderByAddedAtAsc(Long classId);
     List<Waitlist> findByWaitingClassId(Long classId);
+
+    Optional<Waitlist> findTopByWaitingClassIdAndStatusOrderByAddedAtAsc(Long waitingClassId, WaitlistStatus status);
 
     boolean existsByUserIdAndWaitingClassId(Long userId, Long classId);
 }

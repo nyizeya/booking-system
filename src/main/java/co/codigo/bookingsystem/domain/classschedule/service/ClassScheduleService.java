@@ -1,9 +1,9 @@
-package co.codigo.bookingsystem.domain.availableclass.service;
+package co.codigo.bookingsystem.domain.classschedule.service;
 
 import co.codigo.bookingsystem.common.exceptions.BusinessRuleException;
 import co.codigo.bookingsystem.common.utils.CommonUtils;
-import co.codigo.bookingsystem.domain.availableclass.entity.AvailableClass;
-import co.codigo.bookingsystem.domain.availableclass.repository.AvailableClassRepository;
+import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
+import co.codigo.bookingsystem.domain.classschedule.repository.ClassScheduleRepository;
 import co.codigo.bookingsystem.domain.packageplan.entity.PackagePlan;
 import co.codigo.bookingsystem.domain.packageplan.service.PackagePlanService;
 import lombok.RequiredArgsConstructor;
@@ -15,38 +15,38 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AvailableClassService {
+public class ClassScheduleService {
 
-    private final AvailableClassRepository classRepository;
+    private final ClassScheduleRepository classRepository;
     private final PackagePlanService packagePlanService;
 
-    public List<AvailableClass> getUpcomingClassesByCountry(String countryCode) {
+    public List<ClassSchedule> getUpcomingClassesByCountry(String countryCode) {
         return classRepository.findUpcomingClassesByCountry(
             countryCode, 
             LocalDateTime.now()
         );
     }
 
-    public AvailableClass getClassWithLock(Long classId) {
+    public ClassSchedule getClassWithLock(Long classId) {
         return classRepository.findById(classId)
             .orElseThrow(() -> CommonUtils.createEntityNotFoundException("Available class", "id", classId));
     }
 
     @Transactional
-    public AvailableClass createClass(AvailableClass availableClass) {
+    public ClassSchedule createClass(ClassSchedule classSchedule) {
         List<PackagePlan> packages = packagePlanService.getActivePackagesByCountry(
-                availableClass.getCountryCode()
+                classSchedule.getCountryCode()
         );
         if (packages.isEmpty()) {
             throw new BusinessRuleException(
-                    "Cannot create class for country " + availableClass.getCountryCode() +
+                    "Cannot create class for country " + classSchedule.getCountryCode() +
                             ": No active packages available for booking"
             );
         }
-        return classRepository.save(availableClass);
+        return classRepository.save(classSchedule);
     }
 
-    public List<AvailableClass> findAllEndedClasses() {
+    public List<ClassSchedule> findAllEndedClasses() {
         return classRepository.findByEndTimeBefore(LocalDateTime.now());
     }
 }

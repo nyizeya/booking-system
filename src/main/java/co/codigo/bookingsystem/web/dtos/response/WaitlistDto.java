@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class WaitlistDto {
     private Long id;
-    private AvailableClassDto classDetails;
+    private ClassScheduleDto classDetails;
     private int position;
     private LocalDateTime addedAt;
 }

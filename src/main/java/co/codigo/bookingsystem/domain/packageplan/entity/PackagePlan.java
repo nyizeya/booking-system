@@ -49,4 +49,13 @@ public class PackagePlan extends Auditable implements Serializable {
 
     @OneToMany(mappedBy = "packagePlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchasedPackage> purchasedPackages = new ArrayList<>();
+
+    public PackagePlan(String name, String countryCode, Integer credits, BigDecimal price, Integer expiryDays, boolean active) {
+        this.name = name;
+        this.countryCode = countryCode;
+        this.credits = credits;
+        this.price = price;
+        this.expiryDays = expiryDays;
+        this.active = active;
+    }
 }

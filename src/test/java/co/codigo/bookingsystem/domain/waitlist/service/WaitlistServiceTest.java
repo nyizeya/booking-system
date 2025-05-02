@@ -2,8 +2,8 @@ package co.codigo.bookingsystem.domain.waitlist.service;
 
 import co.codigo.bookingsystem.common.enumerations.BookingStatus;
 import co.codigo.bookingsystem.common.exceptions.ConflictException;
-import co.codigo.bookingsystem.domain.availableclass.entity.AvailableClass;
-import co.codigo.bookingsystem.domain.availableclass.service.AvailableClassService;
+import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
+import co.codigo.bookingsystem.domain.classschedule.service.ClassScheduleService;
 import co.codigo.bookingsystem.domain.booking.entity.Booking;
 import co.codigo.bookingsystem.domain.booking.repository.BookingRepository;
 import co.codigo.bookingsystem.domain.purchasedpkg.entity.PurchasedPackage;
@@ -41,7 +41,7 @@ class WaitlistServiceTest {
     private BookingRepository bookingRepository;
 
     @Mock
-    private AvailableClassService classService;
+    private ClassScheduleService classService;
 
     @Mock
     private PurchasedPackageService packageService;
@@ -59,10 +59,10 @@ class WaitlistServiceTest {
 
     @Test
     void addToWaitlist_shouldAddUserToWaitlist() {
-        AvailableClass availableClass = new AvailableClass();
-        availableClass.setId(classId);
+        ClassSchedule classSchedule = new ClassSchedule();
+        classSchedule.setId(classId);
 
-        when(classService.getClassWithLock(classId)).thenReturn(availableClass);
+        when(classService.getClassWithLock(classId)).thenReturn(classSchedule);
         when(bookingRepository.existsByUserIdAndBookedClassIdAndStatus(userId, classId, BookingStatus.CONFIRMED)).thenReturn(false);
         when(waitlistRepository.existsByUserIdAndWaitingClassId(userId, classId)).thenReturn(false);
         when(userService.getUserById(userId)).thenReturn(new User());
@@ -85,24 +85,24 @@ class WaitlistServiceTest {
     void processWaitlist_shouldProcessSuccessfully() {
         String lockKey = "waitlist_lock:" + classId;
 
-        AvailableClass availableClass = new AvailableClass();
-        availableClass.setId(classId);
-        availableClass.setMaxCapacity(10);
-        availableClass.setRequiredCredits(5);
+        ClassSchedule classSchedule = new ClassSchedule();
+        classSchedule.setId(classId);
+        classSchedule.setMaxCapacity(10);
+        classSchedule.setRequiredCredits(5);
 
         Waitlist waitlist = new Waitlist();
         User user = new User();
         waitlist.setUser(user);
-        waitlist.setWaitingClass(availableClass);
+        waitlist.setWaitingClass(classSchedule);
 
         PurchasedPackage purchasedPackage = new PurchasedPackage();
         purchasedPackage.setId(packageId);
         purchasedPackage.setRemainingCredits(10);
 
         when(redisTemplate.opsForValue().setIfAbsent(lockKey, "locked", Duration.ofSeconds(10))).thenReturn(true);
-        when(classService.getClassWithLock(classId)).thenReturn(availableClass);
+        when(classService.getClassWithLock(classId)).thenReturn(classSchedule);
         when(waitlistRepository.findTopByWaitingClassIdOrderByAddedAtAsc(classId)).thenReturn(Optional.of(waitlist));
-        when(packageService.getUserValidPackages(user.getId(), availableClass.getCountryCode())).thenReturn(List.of(purchasedPackage));
+        when(packageService.getUserValidPackages(user.getId(), classSchedule.getCountryCode())).thenReturn(List.of(purchasedPackage));
         when(bookingRepository.save(any(Booking.class))).thenReturn(new Booking());
 
         waitlistService.processWaitlist(classId);
@@ -113,7 +113,7 @@ class WaitlistServiceTest {
 
     @Test
     void refundExpiredWaitlists_shouldRefundCredits() {
-        AvailableClass endedClass = new AvailableClass();
+        ClassSchedule endedClass = new ClassSchedule();
         endedClass.setId(classId);
         endedClass.setRequiredCredits(5);
 
@@ -138,7 +138,7 @@ class WaitlistServiceTest {
 
     @Test
     void refundExpiredWaitlists_shouldNotRefundIfNoPackage() {
-        AvailableClass endedClass = new AvailableClass();
+        ClassSchedule endedClass = new ClassSchedule();
         endedClass.setId(classId);
         endedClass.setRequiredCredits(5);
 

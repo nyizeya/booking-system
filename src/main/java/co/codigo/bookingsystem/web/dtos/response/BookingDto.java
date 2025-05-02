@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BookingDto {
     private Long id;
-    private AvailableClassDto classDetails;
+    private ClassScheduleDto classDetails;
     private BookingStatus status;
     private LocalDateTime bookedAt;
     private Boolean checkedIn;

@@ -1,16 +1,12 @@
 package co.codigo.bookingsystem.domain.booking.service;
 
 import co.codigo.bookingsystem.common.enumerations.BookingStatus;
-import co.codigo.bookingsystem.common.exceptions.BusinessRuleException;
 import co.codigo.bookingsystem.common.exceptions.ConcurrencyException;
 import co.codigo.bookingsystem.common.exceptions.ConflictException;
-import co.codigo.bookingsystem.domain.availableclass.entity.AvailableClass;
-import co.codigo.bookingsystem.domain.availableclass.repository.AvailableClassRepository;
-import co.codigo.bookingsystem.domain.availableclass.service.AvailableClassService;
+import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
+import co.codigo.bookingsystem.domain.classschedule.service.ClassScheduleService;
 import co.codigo.bookingsystem.domain.booking.entity.Booking;
 import co.codigo.bookingsystem.domain.booking.repository.BookingRepository;
-import co.codigo.bookingsystem.domain.packageplan.entity.PackagePlan;
-import co.codigo.bookingsystem.domain.packageplan.service.PackagePlanService;
 import co.codigo.bookingsystem.domain.purchasedpkg.entity.PurchasedPackage;
 import co.codigo.bookingsystem.domain.purchasedpkg.service.PurchasedPackageService;
 import co.codigo.bookingsystem.domain.user.entity.User;
@@ -25,12 +21,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -41,7 +34,7 @@ class BookingServiceTest {
     private BookingRepository bookingRepository;
 
     @Mock
-    private AvailableClassService availableClassService;
+    private ClassScheduleService classScheduleService;
 
     @Mock
     private PurchasedPackageService purchasedPackageService;
@@ -76,13 +69,13 @@ class BookingServiceTest {
         String redisKey = "booking:lock:" + classId + ":" + userId;
         when(valueOperations.setIfAbsent(eq(redisKey), eq("locked"), any())).thenReturn(true);
 
-        AvailableClass availableClass = new AvailableClass();
-        availableClass.setId(classId);
-        availableClass.setStartTime(LocalDateTime.now().plusDays(1));
-        availableClass.setEndTime(LocalDateTime.now().plusDays(1).plusHours(1));
-        availableClass.setRequiredCredits(1);
-        availableClass.setCountryCode("SG");
-        availableClass.setMaxCapacity(10);
+        ClassSchedule classSchedule = new ClassSchedule();
+        classSchedule.setId(classId);
+        classSchedule.setStartTime(LocalDateTime.now().plusDays(1));
+        classSchedule.setEndTime(LocalDateTime.now().plusDays(1).plusHours(1));
+        classSchedule.setRequiredCredits(1);
+        classSchedule.setCountryCode("SG");
+        classSchedule.setMaxCapacity(10);
 
         User user = new User();
         user.setId(userId);
@@ -91,7 +84,7 @@ class BookingServiceTest {
         purchasedPackage.setId(packageId);
 
         when(bookingRepository.existsByUserIdAndBookedClassIdAndStatus(userId, classId, BookingStatus.CONFIRMED)).thenReturn(false);
-        when(availableClassService.getClassWithLock(classId)).thenReturn(availableClass);
+        when(classScheduleService.getClassWithLock(classId)).thenReturn(classSchedule);
         when(userService.getUserById(userId)).thenReturn(user);
         when(bookingRepository.countByBookedClassIdAndStatus(classId, BookingStatus.CONFIRMED)).thenReturn(0L);
         when(bookingRepository.findUserBookingsBetweenDates(any(), any(), any())).thenReturn(List.of());
@@ -101,7 +94,7 @@ class BookingServiceTest {
         Booking savedBooking = new Booking();
         savedBooking.setId(10L);
         savedBooking.setUser(user);
-        savedBooking.setBookedClass(availableClass);
+        savedBooking.setBookedClass(classSchedule);
         savedBooking.setStatus(BookingStatus.CONFIRMED);
 
         when(bookingRepository.save(any(Booking.class))).thenReturn(savedBooking);
@@ -140,7 +133,7 @@ class BookingServiceTest {
         booking.setId(1L);
         booking.setStatus(BookingStatus.CONFIRMED);
 
-        AvailableClass bookedClass = new AvailableClass();
+        ClassSchedule bookedClass = new ClassSchedule();
         bookedClass.setId(2L);
         bookedClass.setStartTime(LocalDateTime.now().plusDays(1));
         bookedClass.setRequiredCredits(2);
@@ -165,11 +158,11 @@ class BookingServiceTest {
 
     @Test
     void isClassFull_shouldReturnTrue_whenMaxReached() {
-        AvailableClass availableClass = new AvailableClass();
-        availableClass.setId(1L);
-        availableClass.setMaxCapacity(2);
+        ClassSchedule classSchedule = new ClassSchedule();
+        classSchedule.setId(1L);
+        classSchedule.setMaxCapacity(2);
 
-        when(availableClassService.getClassWithLock(1L)).thenReturn(availableClass);
+        when(classScheduleService.getClassWithLock(1L)).thenReturn(classSchedule);
         when(bookingRepository.countByBookedClassIdAndStatus(1L, BookingStatus.CONFIRMED)).thenReturn(2L);
 
         assertTrue(bookingService.isClassFull(1L));

@@ -3,6 +3,7 @@ package co.codigo.bookingsystem.domain.packageplan.service;
 import co.codigo.bookingsystem.common.exceptions.ConflictException;
 import co.codigo.bookingsystem.domain.packageplan.entity.PackagePlan;
 import co.codigo.bookingsystem.domain.packageplan.repository.PackagePlanRepository;
+import co.codigo.bookingsystem.web.dtos.requests.PackagePlanRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -65,7 +66,7 @@ class PackagePlanServiceTest {
 
     @Test
     void createPackage_shouldThrowConflictIfExists() {
-        PackagePlan plan = new PackagePlan();
+        PackagePlanRequest plan = new PackagePlanRequest();
         plan.setName("Gold");
         plan.setCountryCode("SG");
 
@@ -87,7 +88,11 @@ class PackagePlanServiceTest {
         when(packagePlanRepository.existsByNameAndCountryCode("Silver", "MY")).thenReturn(false);
         when(packagePlanRepository.save(plan)).thenReturn(plan);
 
-        PackagePlan saved = packagePlanService.createPackage(plan);
+        PackagePlanRequest request = PackagePlanRequest.builder()
+                .name(plan.getName())
+                .countryCode(plan.getCountryCode())
+                .build();
+        PackagePlan saved = packagePlanService.createPackage(request);
 
         assertEquals(plan, saved);
         verify(packagePlanRepository).save(plan);
@@ -100,7 +105,7 @@ class PackagePlanServiceTest {
         existing.setId(id);
         existing.setName("Basic");
 
-        PackagePlan updates = new PackagePlan();
+        PackagePlanRequest updates = new PackagePlanRequest();
         updates.setName("Updated Name");
 
         when(packagePlanRepository.findById(id)).thenReturn(Optional.of(existing));

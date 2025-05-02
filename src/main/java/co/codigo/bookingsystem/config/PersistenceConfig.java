@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {
         "co.codigo.bookingsystem.domain.user.repository",
-        "co.codigo.bookingsystem.domain.availableclass.repository",
+        "co.codigo.bookingsystem.domain.classschedule.repository",
         "co.codigo.bookingsystem.domain.booking.repository",
         "co.codigo.bookingsystem.domain.packageplan.repository",
         "co.codigo.bookingsystem.domain.purchasedpkg.repository",

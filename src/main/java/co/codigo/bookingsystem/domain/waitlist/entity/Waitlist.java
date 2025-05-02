@@ -2,7 +2,7 @@ package co.codigo.bookingsystem.domain.waitlist.entity;
 
 import co.codigo.bookingsystem.common.enumerations.WaitlistStatus;
 import co.codigo.bookingsystem.domain.audit.Auditable;
-import co.codigo.bookingsystem.domain.availableclass.entity.AvailableClass;
+import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
 import co.codigo.bookingsystem.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,7 +31,7 @@ public class Waitlist extends Auditable implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
-    private AvailableClass waitingClass;
+    private ClassSchedule waitingClass;
     
     @Column(nullable = false)
     private Integer position;
@@ -42,4 +42,12 @@ public class Waitlist extends Auditable implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WaitlistStatus status = WaitlistStatus.PENDING;
+
+    public Waitlist(User user, ClassSchedule waitingClass, WaitlistStatus status, Integer position, LocalDateTime addedAt) {
+        this.user = user;
+        this.waitingClass = waitingClass;
+        this.position = position;
+        this.status = status;
+        this.addedAt = addedAt;
+    }
 }

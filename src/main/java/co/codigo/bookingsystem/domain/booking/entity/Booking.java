@@ -2,7 +2,8 @@ package co.codigo.bookingsystem.domain.booking.entity;
 
 import co.codigo.bookingsystem.common.enumerations.BookingStatus;
 import co.codigo.bookingsystem.domain.audit.Auditable;
-import co.codigo.bookingsystem.domain.availableclass.entity.AvailableClass;
+import co.codigo.bookingsystem.domain.classschedule.entity.ClassSchedule;
+import co.codigo.bookingsystem.domain.purchasedpkg.entity.PurchasedPackage;
 import co.codigo.bookingsystem.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,8 +37,12 @@ public class Booking extends Auditable implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
-    private AvailableClass bookedClass;
-    
+    private ClassSchedule bookedClass;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchased_package_id", nullable = false)
+    private PurchasedPackage purchasedPackage;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus status = BookingStatus.CONFIRMED;
@@ -53,4 +58,12 @@ public class Booking extends Auditable implements Serializable {
     
     @Column(name = "credit_refunded")
     private Boolean creditRefunded = false;
+
+    public Booking(User user, ClassSchedule bookedClass, BookingStatus status, LocalDateTime bookedAt) {
+        this.user = user;
+        this.bookedClass = bookedClass;
+        this.status = status;
+        this.bookedAt = bookedAt;
+
+    }
 }
