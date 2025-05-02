@@ -10,6 +10,9 @@ import co.codigo.bookingsystem.domain.packageplan.service.PackagePlanService;
 import co.codigo.bookingsystem.domain.purchasedpkg.entity.PurchasedPackage;
 import co.codigo.bookingsystem.domain.purchasedpkg.service.PurchasedPackageService;
 import co.codigo.bookingsystem.domain.user.entity.User;
+import co.codigo.bookingsystem.domain.user.service.UserService;
+import co.codigo.bookingsystem.domain.waitlist.entity.Waitlist;
+import co.codigo.bookingsystem.domain.waitlist.service.WaitlistService;
 import co.codigo.bookingsystem.web.dtos.requests.BookingRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookingService {
+    private final UserService userService;
+    private final WaitlistService waitlistService;
     private final BookingRepository bookingRepository;
     private final PackagePlanService packagePlanService;
     private final ClassScheduleService classScheduleService;
@@ -49,7 +55,9 @@ public class BookingService {
         }
 
         if (isClassFull(classSchedule)) {
-            throw new ConflictException("Class is fully booked");
+            log.warn("Class is fully booked. Adding to waitlist");
+            waitlistService.addToWaitlist(user, classSchedule);
+            return null;
         }
 
         PurchasedPackage purchasedPackage = purchasedPackageService.getPackageForBooking(user.getId(), packageId, classSchedule.getCountryCode());
@@ -79,7 +87,16 @@ public class BookingService {
             );
         }
 
-        deleteBooking(bookingId);
+//        boolean processWaitlist = isClassFull(booking.getBookedClass());
+//        deleteBooking(bookingId);
+//
+//        if (processWaitlist) {
+//            Optional<Waitlist> waitListOpt = waitlistService.getTheOldestEntry();
+//            waitListOpt.ifPresent(waitlist -> createBooking(
+//                    userService.getUserById(userId),
+//                    new BookingRequest(waitlist.getWaitingClass().getId(), null)
+//            ));
+//        }
     }
 
     public void deleteBooking(Long bookingId) {

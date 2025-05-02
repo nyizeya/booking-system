@@ -2,6 +2,7 @@ package co.codigo.bookingsystem.web.resources;
 
 import co.codigo.bookingsystem.domain.packageplan.entity.PackagePlan;
 import co.codigo.bookingsystem.domain.packageplan.service.PackagePlanService;
+import co.codigo.bookingsystem.domain.purchasedpkg.entity.PurchasedPackage;
 import co.codigo.bookingsystem.domain.purchasedpkg.service.PurchasedPackageService;
 import co.codigo.bookingsystem.domain.user.entity.User;
 import co.codigo.bookingsystem.security.service.UserDetailsImpl;
@@ -33,28 +34,17 @@ public class PackagePlanResource {
     private final PurchasedPackageService purchasedPackageService;
 
     @GetMapping
-    public List<PackagePlanDto> getAllPackages() {
-        return packagePlanMapper.toDTOList(packagePlanService.getAllPackages());
-    }
-
-    @GetMapping("/available")
-    public List<PackagePlanDto> getActivePackagesByCountry(@AuthenticationPrincipal UserDetails userDetails)
-    {
+    public List<PackagePlanDto> getActivePackagesForUser(@AuthenticationPrincipal UserDetails userDetails) {
         User user = ((UserDetailsImpl) userDetails).getUser();
-        List<PackagePlan> packagePlans = packagePlanService.findAllAvailablePackagesForUser(
-                user.getCountryCode(),
-                user.getId()
-        );
-
+        List<PackagePlan> packagePlans = packagePlanService.findAllAvailablePackagesForUser(user.getId());
         return packagePlanMapper.toDTOList(packagePlans);
     }
 
     @GetMapping("/purchased")
-    public List<PurchasedPackageDto> getPurchasedPackages(@AuthenticationPrincipal UserDetails userDetails) {
+    public List<PurchasedPackageDto> getPurchasedPackagesForUser(@AuthenticationPrincipal UserDetails userDetails) {
         UserDetailsImpl userDetail = (UserDetailsImpl) userDetails;
-        return purchasedPackageMapper.toDTOList(
-                purchasedPackageService.getAllPurchasedPackagesForUser(userDetail.getUser().getId())
-        );
+        List<PurchasedPackage> purchasedPackages = purchasedPackageService.getAllPurchasedPackagesForUser(userDetail.getUser().getId());
+        return purchasedPackageMapper.toDTOList(purchasedPackages);
     }
 
 }

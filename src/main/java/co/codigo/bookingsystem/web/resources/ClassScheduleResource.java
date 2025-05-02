@@ -34,12 +34,8 @@ public class ClassScheduleResource {
     private final ClassScheduleMapper classScheduleMapper;
 
     @GetMapping
-    public List<ClassScheduleDto> getClassSchedulesByCountryCode(
-            @RequestParam("countryCode") String countryCode
-    ) {
-        return classScheduleMapper.toDTOList(
-                classScheduleService.getClassSchedulesByCountryCode(countryCode)
-        );
+    public List<ClassScheduleDto> getAllClassSchedules() {
+        return classScheduleMapper.toDTOList(classScheduleService.getAllClasses());
     }
 
     @GetMapping("/cancel-booking")

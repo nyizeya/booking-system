@@ -50,8 +50,8 @@ public class DataInitializer implements CommandLineRunner {
         classScheduleService.createClass(class1);
         classScheduleService.createClass(class2);
 
-        Waitlist waitlist1 = new Waitlist(user1, class1, 1, LocalDateTime.now());
-        Waitlist waitlist2 = new Waitlist(user2, class2, 2, LocalDateTime.now());
+        Waitlist waitlist1 = new Waitlist(user1, class1);
+        Waitlist waitlist2 = new Waitlist(user2, class2);
         waitlistRepository.save(waitlist1);
         waitlistRepository.save(waitlist2);
 

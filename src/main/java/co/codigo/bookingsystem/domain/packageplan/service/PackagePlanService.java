@@ -22,8 +22,8 @@ public class PackagePlanService {
         return packagePlanRepository.findAll();
     }
 
-    public List<PackagePlan> findAllAvailablePackagesForUser(String countryCode, Long userId) {
-        return packagePlanRepository.findAvailablePackagesForUser(countryCode, userId, LocalDateTime.now());
+    public List<PackagePlan> findAllAvailablePackagesForUser(Long userId) {
+        return packagePlanRepository.findAvailablePackagesForUser(userId, LocalDateTime.now());
     }
 
     public List<PackagePlan> getActivePackagesByCountry(String countryCode) {

@@ -10,17 +10,12 @@ import java.util.List;
 
 public interface PackagePlanRepository extends JpaRepository<PackagePlan, Long> {
 
-    boolean existsByNameAndCountryCode(String name, String countryCode);
-
     List<PackagePlan> findByCountryCode(String countryCode);
 
+    boolean existsByNameAndCountryCode(String name, String countryCode);
 
-    // find packages in the same countryCode that hasn't expired and user hasn't bought yet
-    @Query("SELECT p FROM PackagePlan p WHERE p.countryCode = :countryCode AND p.expiryDate > :now " +
+    // find packages that hasn't expired and user hasn't bought yet
+    @Query("SELECT p FROM PackagePlan p WHERE p.expiryDate > :now " +
            "AND NOT EXISTS (SELECT pp FROM PurchasedPackage pp WHERE pp.packagePlan = p AND pp.user.id = :userId)")
-    List<PackagePlan> findAvailablePackagesForUser(
-            @Param("countryCode") String countryCode,
-            @Param("userId") Long userId,
-            @Param("now") LocalDateTime now
-    );
+    List<PackagePlan> findAvailablePackagesForUser(@Param("userId") Long userId, @Param("now") LocalDateTime now);
 }

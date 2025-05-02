@@ -20,6 +20,10 @@ public class ClassScheduleService {
     private final ClassScheduleRepository classRepository;
     private final PackagePlanService packagePlanService;
 
+    public List<ClassSchedule> getAllClasses() {
+        return classRepository.findAll();
+    }
+
     public List<ClassSchedule> getClassSchedulesByCountryCode(String countryCode) {
         return classRepository.findByCountryCode(countryCode);
     }

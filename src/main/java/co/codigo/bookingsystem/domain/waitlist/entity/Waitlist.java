@@ -31,17 +31,9 @@ public class Waitlist extends Auditable implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
     private ClassSchedule waitingClass;
-    
-    @Column(nullable = false)
-    private Integer position;
-    
-    @Column(name = "added_at", nullable = false)
-    private LocalDateTime addedAt = LocalDateTime.now();
 
-    public Waitlist(User user, ClassSchedule waitingClass, Integer position, LocalDateTime addedAt) {
+    public Waitlist(User user, ClassSchedule waitingClass) {
         this.user = user;
         this.waitingClass = waitingClass;
-        this.position = position;
-        this.addedAt = addedAt;
     }
 }
