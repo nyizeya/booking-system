@@ -58,6 +58,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new MessageResponseDTO(e.getMessage()));
     }
 
+    @ExceptionHandler(InsufficientBalanceException.class)
+    public ResponseEntity<MessageResponseDTO> handleInsufficientBalanceException(InsufficientBalanceException e) {
+        return ResponseEntity.badRequest().body(new MessageResponseDTO(e.getMessage()));
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<MessageResponseDTO> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         String message = "Database constraint violation: " + ex.getMessage();

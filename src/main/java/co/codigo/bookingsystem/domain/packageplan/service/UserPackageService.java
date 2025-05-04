@@ -1,6 +1,7 @@
 package co.codigo.bookingsystem.domain.packageplan.service;
 
 import co.codigo.bookingsystem.common.exceptions.ConflictException;
+import co.codigo.bookingsystem.common.exceptions.InsufficientBalanceException;
 import co.codigo.bookingsystem.common.exceptions.InsufficientCreditsException;
 import co.codigo.bookingsystem.domain.packageplan.entity.PackagePlan;
 import co.codigo.bookingsystem.domain.packageplan.entity.UserPackage;
@@ -75,6 +76,10 @@ public class UserPackageService {
     }
 
     public boolean chargeUser(User user, BigDecimal price) {
+        if (user.getBalance().compareTo(price) < 0) {
+            throw new InsufficientBalanceException("Insufficient balance");
+        }
+
         user.setBalance(user.getBalance().subtract(price));
         return true;
     }
