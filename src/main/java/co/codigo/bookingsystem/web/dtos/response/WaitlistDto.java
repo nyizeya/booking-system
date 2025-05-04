@@ -12,6 +12,4 @@ import java.time.LocalDateTime;
 public class WaitlistDto {
     private Long id;
     private ClassScheduleDto classDetails;
-    private int position;
-    private LocalDateTime addedAt;
 }

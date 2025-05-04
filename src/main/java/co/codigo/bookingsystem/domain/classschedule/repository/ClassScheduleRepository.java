@@ -11,4 +11,10 @@ import java.util.Optional;
 
 public interface ClassScheduleRepository extends JpaRepository<ClassSchedule, Long> {
     List<ClassSchedule> findByCountryCode(String countryCode);
+
+    @Query("""
+    SELECT cs FROM ClassSchedule cs
+    WHERE cs.startTime > CURRENT_TIMESTAMP
+    """)
+    List<ClassSchedule> findAllActiveClassSchedules();
 }

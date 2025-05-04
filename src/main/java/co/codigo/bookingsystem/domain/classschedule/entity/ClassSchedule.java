@@ -45,9 +45,6 @@ public class ClassSchedule extends Auditable implements Serializable {
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
     
-    @Column(name = "duration_minutes", nullable = false)
-    private Integer durationMinutes;
-    
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
     
@@ -60,12 +57,11 @@ public class ClassSchedule extends Auditable implements Serializable {
     @OneToMany(mappedBy = "waitingClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Waitlist> waitlists = new ArrayList<>();
 
-    public ClassSchedule(String name, String countryCode, LocalDateTime startTime, LocalDateTime endTime, Integer requiredCredits, Integer maxCapacity, Integer durationMinutes) {
+    public ClassSchedule(String name, String countryCode, LocalDateTime startTime, LocalDateTime endTime, Integer requiredCredits, Integer maxCapacity) {
         this.name = name;
         this.countryCode = countryCode;
         this.requiredCredits = requiredCredits;
         this.maxCapacity = maxCapacity;
-        this.durationMinutes = durationMinutes;
         this.startTime = startTime;
         this.endTime = endTime;
     }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 
 @Data
@@ -17,6 +18,7 @@ public class UserDTO {
     private boolean accountNonExpired;
     private boolean credentialsNonExpired;
     private boolean enabled;
+    private BigInteger balance;
     private LocalDate credentialsExpiryDate;
     private LocalDate accountExpiryDate;
     private String emailVerificationToken;

@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface UserService {
 
+    User updateUser(User user);
+
     User createNewUser(User user);
 
     User registerUser(User user);

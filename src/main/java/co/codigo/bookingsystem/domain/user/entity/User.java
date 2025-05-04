@@ -2,7 +2,7 @@ package co.codigo.bookingsystem.domain.user.entity;
 
 import co.codigo.bookingsystem.domain.audit.Auditable;
 import co.codigo.bookingsystem.domain.booking.entity.Booking;
-import co.codigo.bookingsystem.domain.purchasedpkg.entity.PurchasedPackage;
+import co.codigo.bookingsystem.domain.packageplan.entity.UserPackage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -16,7 +16,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -77,8 +79,8 @@ public class User extends Auditable implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<PurchasedPackage> userPackages = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserPackage> userPackages = new HashSet<>();
 
     public User(String userName, String email, String password, String countryCode) {
         this.username = userName;

@@ -1,7 +1,6 @@
 package co.codigo.bookingsystem.domain.packageplan.entity;
 
 import co.codigo.bookingsystem.domain.audit.Auditable;
-import co.codigo.bookingsystem.domain.purchasedpkg.entity.PurchasedPackage;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -9,8 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -46,7 +45,7 @@ public class PackagePlan extends Auditable implements Serializable {
     private LocalDateTime expiryDate;
 
     @OneToMany(mappedBy = "packagePlan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PurchasedPackage> purchasedPackages = new ArrayList<>();
+    private Set<UserPackage> userPackages = new HashSet<>();
 
     public boolean isActive() {
         return expiryDate.isAfter(LocalDateTime.now());

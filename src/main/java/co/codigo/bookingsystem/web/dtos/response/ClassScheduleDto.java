@@ -18,5 +18,4 @@ public class ClassScheduleDto {
     private int availableSlots;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private int durationMinutes;
 }
