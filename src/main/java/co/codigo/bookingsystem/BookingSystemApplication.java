@@ -9,7 +9,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableScheduling
 @SpringBootApplication
 @RequiredArgsConstructor
 public class BookingSystemApplication {
@@ -34,9 +36,13 @@ public class BookingSystemApplication {
                 adminUser.setRole(roleService.findByRoleName(AppRole.ROLE_ADMIN).get());
                 userService.createNewUser(adminUser);
 
-                User user = new User("user", "user@gmail.com", "1234", "UK");
+                User user = new User("user", "user@gmail.com", "1234", "MM");
                 user.setRole(roleService.findByRoleName(AppRole.ROLE_USER).get());
                 userService.createNewUser(user);
+
+                User user2 = new User("user2", "user2@gmail.com", "1234", "UK");
+                user.setRole(roleService.findByRoleName(AppRole.ROLE_USER).get());
+                userService.createNewUser(user2);
             }
         };
     }

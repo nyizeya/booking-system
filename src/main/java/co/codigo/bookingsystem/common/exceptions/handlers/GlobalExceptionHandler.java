@@ -3,8 +3,10 @@ package co.codigo.bookingsystem.common.exceptions.handlers;
 import co.codigo.bookingsystem.common.exceptions.*;
 import co.codigo.bookingsystem.web.dtos.response.MessageResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,6 +56,29 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InsufficientCreditsException.class)
     public ResponseEntity<MessageResponseDTO> handleInsufficientCreditsException(InsufficientCreditsException e) {
         return ResponseEntity.badRequest().body(new MessageResponseDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<MessageResponseDTO> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        String message = "Database constraint violation: " + ex.getMessage();
+        return ResponseEntity.badRequest().body(new MessageResponseDTO(message));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
+        return ResponseEntity.badRequest().body("Validation failed: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex) {
+        return ResponseEntity.internalServerError().body("Internal server error: " + ex.getMessage());
+    }
+
+    private String getConstraintMessage(DataIntegrityViolationException ex) {
+        if (ex.getCause() != null && ex.getCause().getMessage() != null) {
+            return ex.getCause().getMessage();
+        }
+        return "Unknown database constraint violation.";
     }
 
 }

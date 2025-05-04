@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PackagePlanRequest {
+public class CreatePackagePlanRequest {
 
     @NotBlank(message = "Package name must not be empty")
     private String name;
@@ -31,9 +31,5 @@ public class PackagePlanRequest {
     private Integer creditCount;
 
     @NotNull(message = "Expiry date must not be null")
-    @Min(value = 1, message = "Expiry date must be greater than 0")
-    private LocalDateTime expiryDays;
-
-    @NotNull(message = "Active status must not be null")
-    private Boolean active;
+    private LocalDateTime expiryDate;
 }

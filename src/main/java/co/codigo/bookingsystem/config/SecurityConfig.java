@@ -28,11 +28,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final MDCFilter mdcFilter;
     private final AuthTokenFilter authTokenFilter;
     private final AuthEntryPoint authEntryPoint;
 
-    private static final String[] PUBLIC_URL = {"/contact", "/api/public",  "/api/public/**"};
+    private static final String[] PUBLIC_URL = {"/contact", "/api/public",  "/api/public/**", "/swagger-ui", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**"};
 
     @Bean
     public SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
@@ -43,14 +42,11 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(req -> {
             req.requestMatchers(PUBLIC_URL).permitAll();
-            req.requestMatchers("/oauth2/**").permitAll();
-            req.requestMatchers("/api/audit/**").hasRole("ADMIN");
             req.anyRequest().authenticated();
         });
 
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint));
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterAfter(mdcFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.httpBasic(Customizer.withDefaults());
         return http.build();

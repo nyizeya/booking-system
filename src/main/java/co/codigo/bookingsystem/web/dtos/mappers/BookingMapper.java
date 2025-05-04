@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ClassScheduleMapper.class})
 public interface BookingMapper extends BaseMapper<BookingDto, Booking> {
     @Override
     Booking toEntity(BookingDto dto);

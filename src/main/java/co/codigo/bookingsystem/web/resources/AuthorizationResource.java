@@ -7,11 +7,16 @@ import co.codigo.bookingsystem.domain.user.service.UserService;
 import co.codigo.bookingsystem.security.jwt.services.JwtService;
 import co.codigo.bookingsystem.web.dtos.response.LoginResponseDTO;
 import co.codigo.bookingsystem.web.dtos.response.MessageResponseDTO;
+import co.codigo.bookingsystem.web.dtos.response.PasswordResetTokenDTO;
 import co.codigo.bookingsystem.web.dtos.response.UserDTO;
 import co.codigo.bookingsystem.web.dtos.mappers.UserMapper;
 import co.codigo.bookingsystem.web.dtos.requests.LoginRequest;
 import co.codigo.bookingsystem.web.dtos.requests.ResetPasswordRequest;
 import co.codigo.bookingsystem.web.dtos.requests.SignUpRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +30,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static co.codigo.bookingsystem.common.constants.UrlConstant.AUTH_URL;
@@ -43,6 +46,9 @@ public class AuthorizationResource {
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
 
+    @Operation(summary = "Login", description = "Authenticate a user and generate JWT token.")
+    @ApiResponse(responseCode = "200", description = "Login successful", content = @Content(schema = @Schema(implementation = LoginResponseDTO.class)))
+    @ApiResponse(responseCode = "400", description = "Bad credentials", content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
     @PostMapping("/sign-in")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         Authentication authentication;
@@ -53,7 +59,6 @@ public class AuthorizationResource {
             return ResponseEntity.badRequest().body(new MessageResponseDTO("Bad Credentials"));
         }
 
-        // really important to set Authentication, so the Framework knows current user is Authenticated
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -61,6 +66,9 @@ public class AuthorizationResource {
         return ResponseEntity.ok(new LoginResponseDTO(userDetails.getUsername(), jwtToken, userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet())));
     }
 
+    @Operation(summary = "Register", description = "Register a user and send email verification link.")
+    @ApiResponse(responseCode = "200", description = "Register successful", content = @Content(schema = @Schema(implementation = UserDTO.class)))
+    @ApiResponse(responseCode = "400", description = "Bad credentials", content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
     @PostMapping("/sign-up")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest request) {
         if (userService.existsByUsername(request.getUsername()))
@@ -79,6 +87,9 @@ public class AuthorizationResource {
         return ResponseEntity.ok(dto);
     }
 
+    @Operation(summary = "Email Verification", description = "Verify email from verification token.")
+    @ApiResponse(responseCode = "200", description = "Email has been verified successfully", content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
+    @ApiResponse(responseCode = "400", description = "Error email verification", content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
     @PostMapping("/verify-email")
     public ResponseEntity<?> verifyEmail(
             @RequestParam String token
@@ -91,6 +102,9 @@ public class AuthorizationResource {
         }
     }
 
+    @Operation(summary = "Forgot Password", description = "Response a password reset token.")
+    @ApiResponse(responseCode = "200", description = "Generate password reset token successful", content = @Content(schema = @Schema(implementation = PasswordResetTokenDTO.class)))
+    @ApiResponse(responseCode = "400", description = "Error sending password reset email", content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam String email) {
         log.info("Generate password reset token...");
@@ -100,14 +114,15 @@ public class AuthorizationResource {
             return ResponseEntity.internalServerError().body(new MessageResponseDTO("Error sending password reset email"));
         }
 
-        Map<String, String> body = new HashMap<>() {{
-            put("token", hostOrError);
-        }};
+        PasswordResetTokenDTO body = new PasswordResetTokenDTO(hostOrError);
 
         return ResponseEntity.ok(body);
 
     };
 
+    @Operation(summary = "Reset Password", description = "Reset password.")
+    @ApiResponse(responseCode = "200", description = "Password has been reset successfully", content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
+    @ApiResponse(responseCode = "400", description = "Error reset password : ", content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(
             @RequestBody ResetPasswordRequest request

@@ -29,12 +29,8 @@
 //
 //    @Bean
 //    public RedisConnectionFactory redisConnectionFactory() {
-//        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-//        config.setHostName(redisHost);
-//        config.setPort(redisPort);
-//
-//        LettuceConnectionFactory factory = new LettuceConnectionFactory(config);
-//        factory.setShareNativeConnection(false); // Better for transactional operations
+//        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisHost, redisPort);
+//        factory.setShareNativeConnection(false);
 //        return factory;
 //    }
 //

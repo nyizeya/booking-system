@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "co.codigo.bookingsystem.domain.classschedule.repository",
         "co.codigo.bookingsystem.domain.booking.repository",
         "co.codigo.bookingsystem.domain.packageplan.repository",
-        "co.codigo.bookingsystem.domain.purchasedpkg.repository",
         "co.codigo.bookingsystem.domain.waitlist.repository",
 })
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")

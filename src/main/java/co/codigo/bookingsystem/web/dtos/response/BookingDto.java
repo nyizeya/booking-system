@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BookingDto {
     private Long id;
-    private ClassScheduleDto classDetails;
+    private ClassScheduleDto bookedClass;
     private LocalDateTime bookedAt;
-    private Boolean checkedIn;
 }
